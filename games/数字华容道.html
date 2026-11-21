@@ -47,8 +47,7 @@ body {
 }
 
 #board {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: clamp(2px, 0.5vw, 6px);
     padding: clamp(4px, 1vw, 10px);
     background: #16213e;
@@ -350,12 +349,12 @@ body {
         var fontSize = gridSize <= 3 ? '6vw' :
                        gridSize <= 4 ? '5vw' :
                                        '4vw';
+        boardEl.style.gridTemplateColumns = 'repeat(' + gridSize + ', 1fr)';
+        boardEl.style.gridTemplateRows = 'repeat(' + gridSize + ', 1fr)';
 
         for (var i = 0; i < total; i++) {
             var div = document.createElement('div');
             div.className = 'tile';
-            div.style.width = (100 / gridSize) + '%';
-            div.style.height = (100 / gridSize) + '%';
             div.style.fontSize = fontSize;
             div.dataset.index = i;
 

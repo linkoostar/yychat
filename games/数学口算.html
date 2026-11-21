@@ -15,8 +15,8 @@ body{background:#1a1a2e;display:flex;flex-direction:column;align-items:center;ju
 .score-bar .val{color:#4ecca3;font-weight:bold}
 .question-box{background:rgba(255,255,255,.05);border:2px solid rgba(78,204,163,.3);border-radius:16px;padding:clamp(16px,3vh,32px) clamp(24px,4vw,48px);text-align:center;min-width:min(80vw,400px)}
 .question-text{font-size:clamp(32px,7vw,64px);font-weight:bold;letter-spacing:4px}
-.answer-grid{display:flex;flex-wrap:wrap;gap:clamp(8px,1.5vw,16px);width:min(88vw,440px)}
-.answer-btn{width:50%;box-sizing:border-box;padding:clamp(12px,2vh,24px) clamp(16px,3vw,32px);border:3px solid rgba(255,255,255,.15);border-radius:16px;background:rgba(255,255,255,.05);font-size:clamp(24px,5vw,44px);font-weight:bold;color:#fff;cursor:pointer;transition:all .2s;text-align:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:clamp(52px,8vh,80px)}
+.answer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(8px,1.5vw,16px);width:min(88vw,440px)}
+.answer-btn{width:auto;box-sizing:border-box;padding:clamp(12px,2vh,24px) clamp(16px,3vw,32px);border:3px solid rgba(255,255,255,.15);border-radius:16px;background:rgba(255,255,255,.05);font-size:clamp(24px,5vw,44px);font-weight:bold;color:#fff;cursor:pointer;transition:all .2s;text-align:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:clamp(52px,8vh,80px)}
 .answer-btn.selected{border-color:#4ecca3;background:rgba(78,204,163,.15);box-shadow:0 0 16px rgba(78,204,163,.3)}
 .answer-btn.correct{border-color:#4ecca3;background:rgba(78,204,163,.3);animation:popCorrect .4s ease}
 .answer-btn.wrong{border-color:#e74c3c;background:rgba(231,76,60,.2);animation:shake .4s ease}
@@ -92,6 +92,7 @@ body{background:#1a1a2e;display:flex;flex-direction:column;align-items:center;ju
   var feedbackEl = document.getElementById('feedback');
 
   var TOTAL_Q = 10;
+  var DIFFS = [{name:'简单'}, {name:'普通'}, {name:'困难'}];
   var state = 'menu'; // menu, playing, answered, result
   var diffIdx = 1;
   var currentQ = 0;
@@ -317,31 +318,7 @@ body{background:#1a1a2e;display:flex;flex-direction:column;align-items:center;ju
     }
 
     if (state === 'playing') {
-      if (key === 'ArrowLeft' || key === 'a' || key === 'A') {
-        e.preventDefault();
-        selectedIdx = (selectedIdx + 3) % 4; // left: -1 in 2-col grid
-        // In 2-col grid: 0,1 top row; 2,3 bottom row
-        // Left from 0->stay, 1->0, 2->stay, 3->2
-        if (selectedIdx % 2 === 1 && key !== 'ArrowDown' && key !== 'ArrowUp') {
-          // actually let me redo this properly
-        }
-        updateSelection();
-      } else if (key === 'ArrowRight' || key === 'd' || key === 'D') {
-        e.preventDefault();
-        // 2-col grid: left<->right in same row
-        if (selectedIdx % 2 === 0) selectedIdx++;
-        updateSelection();
-      } else if (key === 'ArrowUp' || key === 'w' || key === 'W') {
-        e.preventDefault();
-        // Up: go to same column in row above
-        if (selectedIdx >= 2) selectedIdx -= 2;
-        updateSelection();
-      } else if (key === 'ArrowDown' || key === 's' || key === 'S') {
-        e.preventDefault();
-        // Down: go to same column in row below
-        if (selectedIdx < 2) selectedIdx += 2;
-        updateSelection();
-      } else if (key === 'Enter' || key === ' ') {
+      if (key === 'Enter' || key === ' ') {
         e.preventDefault();
         confirmAnswer();
       }
